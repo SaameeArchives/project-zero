@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Zero - Sound FX</title>
+   <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  
+
+<!-- Subtle Texture Noise -->
+    <div class="absolute inset-0 opacity-40 pointer-events-none" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiLz4KPC9zdmc+');"></div>
+
+    <!-- Audio Control -->
+    <div class="absolute top-8 right-8 z-20">
+        <button id="audio-toggle" class="p-3 rounded-2xl transition-all border shadow-sm bg-[#eeedeb] text-stone-400 border-stone-300 hover:scale-105 hover:text-stone-700 hover:border-stone-400">
+            <i data-lucide="volume-x" class="w-5 h-5"></i>
+        </button>
+    </div>
+
+    <!-- Title Header -->
+    <div class="text-center mb-12 z-10 relative">
+        <h1 class="text-5xl font-extrabold tracking-tight mb-2 text-stone-800 drop-shadow-sm">Project <span class="text-stone-500">Zero</span></h1>
+        <p class="text-xs text-stone-500 font-bold tracking-[0.3em] uppercase opacity-80 text-engraved">Sound FX Using Web Audio API</p>
+    </div>
+
+    <!-- Main Cluster Container -->
+    <div class="flex flex-wrap items-center justify-center gap-6 max-w-5xl animate-enter p-4 relative z-10">
+        
+        <!-- 1. Primary Action (Confirm) - HEIGHT: h-14 (56px) -->
+        <button id="btn-confirm" class="stone-card group relative overflow-hidden bg-stone-800 text-stone-100 shadow-lg shadow-stone-800/10 min-w-[160px] h-14 px-6 font-bold text-sm tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-stone-800/20 active:translate-y-0 active:scale-[0.98] flex items-center justify-center gap-2" 
+            data-sound="click-primary" 
+            data-hover-sound="hover-primary">
+            <span class="relative z-10 flex items-center gap-2">Confirm Action <i data-lucide="check" class="w-4 h-4 transition-transform group-hover:scale-110"></i></span>
+            <!-- Matte sheen effect -->
+            <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </button>
+
+        <!-- 2. Secondary Action (Save Draft) - HEIGHT: h-14 -->
+        <button class="stone-card group bg-[#eeedeb] text-stone-600 hover:text-stone-900 hover:bg-white border-stone-300 min-w-[140px] h-14 px-6 font-bold text-sm tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98] flex items-center justify-center gap-2" 
+            data-sound="click-secondary" 
+            data-hover-sound="hover-secondary">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>Save Draft</span>
+        </button>
+
+        <!-- 3. Destructive Action (Delete) - UPDATED: Destructive colors by default, No Underline -->
+        <button class="stone-card group bg-[#eeedeb] text-red-500  hover:bg-red-50 hover:text-red-600 hover:border-red-300 hover:shadow-sm min-w-[100px] h-14 px-4 font-bold text-sm tracking-wide transition-all active:scale-95 flex items-center justify-center gap-2" 
+            data-sound="click-destructive" 
+            data-hover-sound="hover-destructive">
+            <i data-lucide="trash-2" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+            <span>Delete</span>
+        </button>
+
+        <!-- 4. Mini Player - HEIGHT: h-14 (Matched) -->
+        <div class="relative group">
+            <button id="mini-player" class="stone-card w-14 h-14 flex items-center justify-center hover:bg-white hover:scale-105 transition-all active:scale-95 active:bg-stone-100" 
+                data-sound="click-primary"
+                data-hover-sound="hover-primary">
+                <i data-lucide="play" class="w-6 h-6 ml-1 fill-current text-stone-700"></i>
+            </button>
+        </div>
+
+        <!-- 5. Toggle Switch - HEIGHT: h-14 (Matched) -->
+        <div class="stone-card px-6 h-14 flex items-center justify-center">
+            <div id="sonic-toggle" class="w-14 h-7 rounded-full p-1 cursor-pointer transition-colors duration-300 shadow-inner bg-stone-300" data-state="on">
+                <div class="bg-white w-5 h-5 rounded-full shadow-md border border-stone-100 transform transition-transform duration-300 translate-x-7 pointer-events-none"></div>
+            </div>
+        </div>
+
+        <!-- 6. Precision Slider - HEIGHT: h-14 (Matched) -->
+        <div class="stone-card px-8 h-14 w-72 flex items-center justify-center relative">
+            <div class="relative w-full h-8 flex items-center">
+                <!-- Track -->
+                <div class="absolute left-0 right-0 h-1.5 bg-stone-200 rounded-full overflow-hidden box-shadow-inner">
+                     <!-- Active Track -->
+                    <div id="slider-track" class="h-full bg-stone-500 transition-all duration-75 ease-out" style="width: 60%;"></div>
+                </div>
+                <!-- Input -->
+                <input type="range" min="0" max="100" value="60" id="sonic-slider" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                <!-- Visual Thumb -->
+                <div id="slider-thumb" class="absolute h-6 w-6 bg-[#f5f5f4] border-2 border-stone-500 shadow-sm rounded-full pointer-events-none transition-all duration-75 ease-out z-10 top-1/2 -translate-y-1/2" style="left: calc(60% - 12px);"></div>
+            </div>
+        </div>
+
+        <!-- 7. Command Input -->
+        <div class="w-72 h-14">
+            <div class="relative group stone-card h-full transition-all focus-within:ring-2 focus-within:ring-stone-400/20 focus-within:border-stone-400 flex items-center" data-hover-sound="hover-input">
+                <input type="text" placeholder="Enter command..." class="w-full bg-transparent text-stone-700 h-full rounded-2xl px-6 text-sm font-semibold focus:outline-none placeholder:text-stone-400" id="sonic-input">
+                <div class="absolute right-5 text-stone-300 group-focus-within:text-stone-500 transition-colors">
+                    <i data-lucide="command" class="w-5 h-5"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Status Badge -->
+        <button id="badge-fx" class="stone-card h-14 group px-6 text-xs font-bold uppercase tracking-widest transition-all bg-[#fafaf9] text-stone-500 hover:text-stone-800 hover:shadow-md hover:-translate-y-0.5 flex items-center justify-center" data-label="Audio FX">
+            <span class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-stone-400 group-hover:bg-stone-600 transition-colors transition-all duration-300"></span>
+                Audio FX
+            </span>
+        </button>
+
+        <!-- 9. Connection Tabs - HEIGHT: h-14 (Matched via padding calc) -->
+        <div class="stone-card h-14 p-1.5 flex gap-1.5 items-center" id="radio-group">
+            <button class="radio-btn h-full w-12 flex items-center justify-center rounded-lg transition-all bg-stone-200 text-stone-800 shadow-inner">
+                <i data-lucide="wifi" class="w-5 h-5"></i>
+            </button>
+            <button class="radio-btn h-full w-12 flex items-center justify-center rounded-lg transition-all text-stone-400 hover:bg-stone-100 hover:text-stone-600">
+                <i data-lucide="battery" class="w-5 h-5"></i>
+            </button>
+            <button class="radio-btn h-full w-12 flex items-center justify-center rounded-lg transition-all text-stone-400 hover:bg-stone-100 hover:text-stone-600">
+                <i data-lucide="radio" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- 10. Potentiometer (Dial) -->
+        <div class="stone-card p-5 flex items-center justify-center relative">
+            <div id="sonic-dial" class="relative w-20 h-20 rounded-full bg-[#e7e5e4] border border-stone-300 shadow-[4px_4px_10px_rgba(0,0,0,0.05),-4px_-4px_10px_rgba(255,255,255,0.8)] flex items-center justify-center cursor-ns-resize active:scale-[0.98] transition-transform select-none" style="transform: rotate(45deg);">
+                <!-- Dial Marker -->
+                <div class="absolute top-3 w-1.5 h-3 bg-stone-400 rounded-full"></div>
+                <!-- Center Cap -->
+                <div class="w-12 h-12 rounded-full bg-[#f5f5f4] shadow-[inset_1px_1px_2px_rgba(0,0,0,0.05)]"></div>
+            </div>
+        </div>
+
+        <!-- 11. XY Pad - Icon Restored -->
+        <div class="stone-card p-2">
+            <div id="sonic-pad" class="w-44 h-28 bg-[#f0efeb] border border-stone-200 rounded-xl relative overflow-hidden group cursor-crosshair shadow-inner transition-colors hover:border-stone-300">
+                <!-- Dot Grid -->
+                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#44403c 1px, transparent 1px); background-size: 16px 16px;"></div>
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <i data-lucide="crosshair" class="w-5 h-5 text-stone-400"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script src="index.js"></script>
+</body>
+</html>
